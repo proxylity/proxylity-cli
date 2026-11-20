@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Proxylity.Cli.Aws</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.CloudControlApi" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.CloudFormation" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.CloudWatch" Version="4.1.1" />
+    <PackageReference Include="AWSSDK.CloudWatchLogs" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.IdentityManagement" Version="4.1.1" />
+    <PackageReference Include="AWSSDK.Lambda" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.S3" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.Signin" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.SSO" Version="4.1.0" />
+    <PackageReference Include="AWSSDK.SSOOIDC" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Proxylity.Cli.Core\Proxylity.Cli.Core.csproj" />
+  </ItemGroup>
+
+</Project>

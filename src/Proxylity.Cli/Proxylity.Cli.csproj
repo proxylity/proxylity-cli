@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>proxylity</AssemblyName>
+    <RootNamespace>Proxylity.Cli</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Proxylity.Cli.Core\Proxylity.Cli.Core.csproj" />
+    <ProjectReference Include="..\Proxylity.Cli.Aws\Proxylity.Cli.Aws.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Proxylity.Cli.Tests" />
+  </ItemGroup>
+
+  <!--
+    The AWS SDK loads these credential-provider assemblies by name at runtime (for 'aws login',
+    IAM Identity Center/SSO, and assume-role profiles). Trimming removes them silently because
+    nothing references them statically, which breaks those credential types. Keep them.
+  -->
+  <ItemGroup>
+    <TrimmerRootAssembly Include="AWSSDK.Signin" />
+    <TrimmerRootAssembly Include="AWSSDK.SSO" />
+    <TrimmerRootAssembly Include="AWSSDK.SSOOIDC" />
+    <TrimmerRootAssembly Include="AWSSDK.SecurityToken" />
+  </ItemGroup>
+
+</Project>

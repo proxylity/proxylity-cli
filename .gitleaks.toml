@@ -1,0 +1,13 @@
+title = "Proxylity CLI gitleaks configuration"
+
+[extend]
+useDefault = true
+
+# Documentation-placeholder values that are safe to appear in fixtures and examples.
+[allowlist]
+description = "Documentation placeholders"
+regexes = [
+  '''123456789012''',
+  '''AKIAIOSFODNN7EXAMPLE''', # gate:allow (AWS documentation example key)
+  '''wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY''',
+]

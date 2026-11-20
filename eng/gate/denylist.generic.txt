@@ -1,0 +1,32 @@
+﻿# Generic deny patterns (.NET regular expressions, one per line).
+# Lines starting with '#' and blank lines are ignored.
+# A line prefixed with 'release:' is only enforced in release mode.
+#
+# This file is public. Do NOT put anything sensitive here. Organization-specific
+# patterns (internal names, hostnames, codenames, account IDs, ...) belong in the
+# private PRIVATE_DENYLIST secret, not in the repository.
+#
+# To allow a specific line, add the text 'gate:allow' on that line.
+
+# Cloud credentials and keys
+\b(AKIA|ASIA)[0-9A-Z]{16}\b
+-----BEGIN [A-Z ]*PRIVATE KEY-----
+
+# ARNs with real-looking account IDs (the documentation placeholder 123456789012 is allowed)
+arn:aws[a-z\-]*:[a-z0-9\-]*:[a-z0-9\-]*:(?!123456789012:)\d{12}:
+
+# Local machine paths that should not be committed
+(?i)\b[a-z]:\\Users\\[^\\\s"']+
+(?i)/Users/[^/\s"']+/(source|Documents|Desktop|Downloads)/
+(?i)/home/[^/\s"']+/(source|src|work|projects)/
+
+# Markers that suggest non-public material
+(?i)\bconfidential\b
+(?i)internal[ -]use[ -]only
+(?i)do not distribute|not for (public )?(distribution|release)
+(?i)\bproprietary\b
+
+# Release-blocking placeholders
+release:\bTODO\b
+release:\bFIXME\b
+release:\bXXX\b

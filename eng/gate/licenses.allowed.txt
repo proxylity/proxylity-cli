@@ -1,0 +1,11 @@
+# SPDX license identifiers allowed for dependencies (one per line).
+# Permissive licenses compatible with distributing this project under MIT.
+MIT
+Apache-2.0
+BSD-2-Clause
+BSD-3-Clause
+ISC
+0BSD
+Zlib
+Unlicense
+MS-PL

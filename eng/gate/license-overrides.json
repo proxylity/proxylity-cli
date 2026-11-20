@@ -1,0 +1,6 @@
+{
+  "xunit.abstractions": {
+    "license": "Apache-2.0",
+    "reason": "Package declares only a license URL, which points to the xUnit.net repository license (Apache-2.0). Test-only dependency; not shipped."
+  }
+}

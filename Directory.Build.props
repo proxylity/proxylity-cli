@@ -1,0 +1,38 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <!--
+    Version is supplied by the build (see eng/Get-Version.ps1 and .github/workflows).
+    Local builds without an explicit version get a development version.
+  -->
+  <PropertyGroup>
+    <Version Condition="'$(Version)' == ''">0.0.0-dev</Version>
+  </PropertyGroup>
+
+  <!--
+    AoT readiness. We do not publish with Native AoT yet (the AWS SDK for .NET is the
+    blocker), but all code must stay trimming- and AoT-compatible so we can switch as
+    soon as the SDK allows it. The analyzers below surface violations at build time.
+    Reflection-based JSON serialization is disabled so only source-generated
+    System.Text.Json contexts can be used.
+  -->
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+
+</Project>
+

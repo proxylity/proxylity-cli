@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Proxylity.Cli.Aws/Proxylity.Cli.Aws.csproj" />
+    <Project Path="src/Proxylity.Cli.Core/Proxylity.Cli.Core.csproj" />
+    <Project Path="src/Proxylity.Cli/Proxylity.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Proxylity.Cli.Tests/Proxylity.Cli.Tests.csproj" />
+  </Folder>
+</Solution>

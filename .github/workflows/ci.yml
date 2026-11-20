@@ -1,0 +1,92 @@
+﻿name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build and test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          fetch-depth: 0 # full history and tags are required to compute the version
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+
+      - name: Compute version
+        id: version
+        shell: pwsh
+        run: ./eng/Get-Version.ps1
+
+      - name: Build
+        run: dotnet build --configuration Release "-p:Version=${{ steps.version.outputs.version }}"
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+
+  # Blocking: a trimmed, self-contained publish must succeed without trim warnings and must still
+  # contain the AWS SDK credential-provider assemblies that are loaded at run time.
+  trimmed-publish:
+    name: Trimmed publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+
+      - name: Publish trimmed
+        run: dotnet publish src/Proxylity.Cli --configuration Release --runtime linux-x64 --self-contained -p:PublishTrimmed=true -p:Version=0.0.0-ci --output out-trim
+
+      - name: Check credential-provider assemblies
+        run: |
+          for f in AWSSDK.Signin.dll AWSSDK.SSO.dll AWSSDK.SSOOIDC.dll AWSSDK.SecurityToken.dll; do
+            test -f "out-trim/$f" || { echo "missing $f"; exit 1; }
+          done
+
+      - name: Smoke test
+        run: |
+          ./out-trim/proxylity --version
+          ./out-trim/proxylity --help
+
+  # Canary: attempts a real Native AoT publish so we notice the moment it becomes possible
+  # (and when it regresses). Non-blocking: the AWS SDK is in the project, but Native AoT is
+  # not yet a supported way to ship it.
+  aot-canary:
+    name: Native AoT canary
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+
+      - name: Install native toolchain
+        run: sudo apt-get update && sudo apt-get install -y clang zlib1g-dev
+
+      - name: Publish with Native AoT
+        run: dotnet publish src/Proxylity.Cli --configuration Release --runtime linux-x64 -p:PublishAot=true --output out-aot
+
+      - name: Smoke test
+        run: ./out-aot/proxylity --version
