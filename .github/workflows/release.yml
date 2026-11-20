@@ -1,4 +1,4 @@
-﻿name: Release
+name: Release
 
 # Triggered by publishing a GitHub Release whose tag is a plain semantic version
 # (for example 1.2.3 or 1.3.0-rc.1, with no "v" prefix). A tag containing "-" is a prerelease and the
@@ -89,7 +89,7 @@ jobs:
             tar -C out/${{ matrix.rid }} -czf "dist/${name}.tar.gz" proxylity LICENSE
           fi
 
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: package-${{ matrix.rid }}
           path: dist/*
@@ -111,7 +111,7 @@ jobs:
           dotnet tool restore
           dotnet tool run dotnet-CycloneDX Proxylity.Cli.slnx --output sbom --filename proxylity-${{ needs.verify.outputs.version }}.sbom.json --output-format Json
 
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: sbom
           path: sbom/*
